@@ -1,5 +1,5 @@
 - 👋 Hi, I’m @Bijaya1234-h
-- 👀 I’m interested in BLOCKCHAIN DEVLOP
+- 👀 I’m interested in BLOCKCHAIN DEVLOPE
 - 🌱 I’m currently learning HTML,CSS, .NET BASIC ,C++ BASIC
 - 💞️ I’m looking to collaborateing
 - 📫 How to reach me rbijayakrushna@gmail.com
