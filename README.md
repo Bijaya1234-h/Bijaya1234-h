@@ -1,6 +1,6 @@
 - 👋 Hi, I’m @Bijaya1234-h
 - 👀 I’m interested in BLOCKCHAIN DEVLOPE
-- 🌱 I’m currently learning HTML,CSS, .NET BASIC ,C++ BASIC
+- 🌱 I’m currently learning SAP ABAP HTML,CSS, .NET BASIC ,C++ BASIC
 - 💞️ I’m looking to collaborateing
 - 📫 How to reach me rbijayakrushna@gmail.com
 - My linkedin profile is-https://www.linkedin.com/in/bijaya-krushna-rout-ab53791b1/
