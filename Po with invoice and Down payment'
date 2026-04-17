@@ -1,0 +1,72 @@
+@AbapCatalog.sqlViewName: 'ZMM_PO_DP_INV'
+
+@AccessControl.authorizationCheck: #CHECK
+@EndUserText.label: 'Po with invoice and Down payment'
+
+define view ZMM_PO_INV_DP as select from ZMM_PO_GR_DETAILS as _po
+left outer join ekbe as ekbe_inv on ekbe_inv.ebeln = _po.purchase_order
+and ekbe_inv.ebelp = _po.po_line_item
+and ekbe_inv.bewtp = 'Q'
+and ekbe_inv.vgabe = '2'                                  
+                                    
+
+    left outer join bsak on 
+    bsak.bukrs = _po.company_code and
+    bsak.ebeln = _po.purchase_order
+      and bsak.ebelp = _po.po_line_item
+      and bsak.lifnr = _po.vendor_number
+      and bsak.umskz = 'A'  // Down Payment special GL
+      and bsak.bschl = '29'
+      
+    left outer join bkpf on 
+       bkpf.belnr = bsak.belnr
+      and bkpf.bukrs = _po.company_code 
+      and bkpf.gjahr = bsak.gjahr
+{
+    key _po.company_code,
+  key _po.purchase_order,
+  key _po.po_line_item ,
+  
+
+  _po.vendor_number,
+  _po.vendor_name,
+  _po.po_doc_type,
+  _po.plant,
+  _po.po_date,
+  _po.material_number,
+  _po.material_desc_po,
+  _po.material_desc_master,
+  _po.uom,
+  _po.po_qty,
+  _po.purchase_req_line,
+  _po.base_price,
+  _po.net_price,
+  _po.tax_code,
+  _po.material_group,
+  _po.wbs_element,
+  _po.purchase_requisition,
+  _po.purchase_requisition_date,
+  _po.purchase_group,
+  _po.condition_document_number,
+  _po.mandt,
+  _po.deletion_flag,
+  _po.grn_number,
+  _po.grn_date,
+  _po.grn_qty,
+  _po.grn_amount,
+  _po.received_qty_signed,
+  
+    // Invoice Details
+  ekbe_inv.belnr as invoice_number,
+  ekbe_inv.budat as invoice_date,
+  ekbe_inv.menge as invoice_qty,
+  ekbe_inv.dmbtr as invoice_amount,
+  
+  // Down Payment Details
+  bsak.belnr as dp_request_number,
+  bkpf.budat as dp_request_date,
+  
+   @Semantics.amount.currencyCode: 'dp_currency'
+  bsak.dmbtr     as dp_payment_amount,
+  bsak.waers     as dp_currency
+}
