@@ -1,0 +1,52 @@
+@AbapCatalog.sqlViewName: 'ZMM_PO_GR'
+@AccessControl.authorizationCheck: #CHECK
+@EndUserText.label: 'Po Gr Details'
+
+define view ZMM_PO_GR_DETAILS as select from ZMM_024_PR_Register_CDS as _PR
+left outer join ekbe on ekbe.ebeln = _PR.purchase_order
+and ekbe.ebelp = _PR.po_line_item
+and ekbe.bewtp = 'E'
+{
+    key _PR.company_code,
+  key _PR.purchase_order,
+  key _PR.po_line_item,
+  
+    // All PO fields
+
+ _PR.vendor_number,
+ _PR.vendor_name,
+ _PR.po_doc_type,
+ _PR.plant,
+ _PR.po_date,
+ _PR.material_number,
+ _PR.material_desc_po,
+ _PR.material_desc_master,
+ _PR.uom,
+ _PR.po_qty,
+ _PR.purchase_req_line,
+ _PR.base_price,
+ _PR.net_price,
+ _PR.tax_code,
+ _PR.material_group,
+ _PR.wbs_element,
+ _PR.purchase_requisition,
+ _PR.purchase_requisition_date,
+ _PR.purchase_group,
+ _PR.condition_document_number,
+ _PR.mandt,
+ _PR.deletion_flag,
+    // GR Details
+  ekbe.belnr as grn_number,
+  ekbe.budat as grn_date,
+  ekbe.menge as grn_qty,
+  ekbe.dmbtr as grn_amount,
+  
+    // Received Quantity (calculated)
+  cast(
+    case 
+      when ekbe.shkzg = 'S' then ekbe.menge
+      when ekbe.shkzg = 'H' then ekbe.menge * -1
+      else 0
+    end
+  as menge_d ) as received_qty_signed  
+};
