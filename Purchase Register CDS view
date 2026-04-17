@@ -1,0 +1,65 @@
+@AbapCatalog.sqlViewName: 'ZMM_PR_REGISTER'
+@AbapCatalog.compiler.compareFilter: true
+@AbapCatalog.preserveKey: true
+@AccessControl.authorizationCheck: #CHECK
+@EndUserText.label: 'Purchase Register CDS view'
+
+@Metadata.ignorePropagatedAnnotations: true
+define view ZMM_024_PR_Register_CDS as select from ekpo
+inner join ekko on ekko.ebeln = ekpo.ebeln
+left outer join lfa1 on lfa1.lifnr = ekko.lifnr
+left outer join makt on makt.matnr = ekpo.matnr and makt.spras = $session.system_language
+left outer join ekkn on ( ekkn.ebeln = ekpo.ebeln and ekkn.ebelp = ekpo.ebelp and ekkn.zekkn = '01' )
+//left outer join prps on ( prps.pspnr = ekkn.ps_psp_pnr )
+left outer join eban on eban.banfn = ekpo.banfn and eban.bnfpo = ekpo.bnfpo
+{
+// ===== PO HEADER FIELDS =====
+    key ekko.bukrs as company_code,
+  key ekko.ebeln as purchase_order,
+  key ekpo.ebelp as po_line_item ,
+  
+    // Vendor Information
+  ekko.lifnr as vendor_number,
+  lfa1.name1 as vendor_name, 
+  
+   // PO Document Details
+  ekko.bsart as po_doc_type,
+  ekpo.werks as plant,
+  ekko.bedat as po_date,
+  
+   // Material Information
+  ekpo.matnr as material_number,
+  ekpo.txz01 as material_desc_po,
+  makt.maktx as material_desc_master,
+  ekpo.meins as uom,
+  
+   // Quantity Information
+  ekpo.menge as po_qty,
+  ekpo.bnfpo as purchase_req_line,
+  
+    // Pricing - Base
+  ekpo.netpr as base_price,
+  ekpo.netwr as net_price,
+  ekpo.mwskz as tax_code,
+  
+    // Account Assignment
+  ekpo.matkl as material_group,
+  ekkn.ps_psp_pnr as wbs_element,
+  //prps.posid as wbs_conv_ext,
+  ekpo.banfn as purchase_requisition,
+  eban.badat as purchase_requisition_date,
+  
+    // Purchase Group
+  ekko.ekgrp as purchase_group,
+  
+  // Condition Document Reference
+  ekko.knumv as condition_document_number,
+  
+  // Technical Fields
+  ekko.mandt,
+  ekpo.loekz as deletion_flag
+}
+where
+  ekpo.loekz = ''
+  and ekko.loekz = ''
+;
